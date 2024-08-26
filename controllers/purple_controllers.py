@@ -26,7 +26,7 @@ def move_forward():
 
     if is_initial:
         setup_pins()
-
+    #note reverse the direction here and in backwards
     gpio.output(directionPin,gpio.HIGH)
     time.sleep(0.01)
     for x in range(0,1600):
