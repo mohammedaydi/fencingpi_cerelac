@@ -1,4 +1,4 @@
-from flask import request
+from flask import request, jsonify
 import time
 from data.cerelac_data import users,is_available,entry_pass,purple,black
 
@@ -41,4 +41,5 @@ def alive_state():
     else:
         black["is_alive"] = True
         
-    return {"purple": purple["is_alive"], "black": black["is_alive"]}
+    data = {"purple": purple["is_alive"], "black": black["is_alive"]}
+    return jsonify(data)

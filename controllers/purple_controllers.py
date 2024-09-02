@@ -1,6 +1,6 @@
 import time
-from data.cerelac_data import purple
-import RPi.GPIO as gpio
+from data.cerelac_data import purple,is_moving
+from data.cerelac_data import gpio
 
 enPin = 11
 stepPin = 10
@@ -23,13 +23,18 @@ def setup_pins():
     is_initial = False
 
 def move_forward():
+   # if is_initial:
+    #    setup_pins()
+    
+    global is_moving
+    while is_moving:
+        print('waiting for movement');
+    is_moving = True
 
-    if is_initial:
-        setup_pins()
-    #note reverse the direction here and in backwards
-    gpio.output(directionPin,gpio.HIGH)
+    #note reverse the direction here and in backwards -- done  (reversed them)
+    gpio.output(directionPin,gpio.LOW)
     time.sleep(0.01)
-    for x in range(0,1600):
+    for x in range(0,800):
         switch1 = gpio.input(purple_front_switch)
         switch2 = gpio.input(purple_rear_switch)
 
@@ -37,18 +42,26 @@ def move_forward():
             break
 
         gpio.output(stepPin,gpio.HIGH)
-        time.sleep(0.000600)
+        time.sleep(0.000300)
         gpio.output(stepPin,gpio.LOW)
-        time.sleep(0.000600)
-    gpio.cleanup()
+        time.sleep(0.000300)
+    #gpio.cleanup()
+    
+    is_moving = False
     return {"state": "moved_forward"}
 
 def move_backwards():
-    if is_initial:
-        setup_pins()
-    gpio.output(directionPin,gpio.LOW)
+    #if is_initial:
+      #  setup_pins()
+    
+    global is_moving
+    while is_moving:
+        print('waiting for movement');
+    is_moving = True
+    
+    gpio.output(directionPin,gpio.HIGH)
     time.sleep(0.01)
-    for x in range(0,1600):
+    for x in range(0,800):
         switch1 = gpio.input(purple_front_switch)
         switch2 = gpio.input(purple_rear_switch)
 
@@ -56,10 +69,12 @@ def move_backwards():
             break
 
         gpio.output(stepPin,gpio.HIGH)
-        time.sleep(0.000600)
+        time.sleep(0.000300)
         gpio.output(stepPin,gpio.LOW)
-        time.sleep(0.000600)
-    gpio.cleanup()
+        time.sleep(0.000300)
+    #gpio.cleanup()
+
+    is_moving = False
     return {"state": "moved_backward"}
 
 def rotate_right():
